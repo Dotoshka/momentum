@@ -193,6 +193,59 @@ city.addEventListener('keypress', setCity);
 city.addEventListener('blur', setCity);
 city.addEventListener('click', editText);
 
+// Get random integer (from 1)
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max) + 1);
+}
+
+
+// Get background images array
+
+
+function getBgArray() {
+    let bgArr = [];
+    let i = 0;
+    //let imgNumber = 0;
+
+    while (i < 6) { 
+        //console.log(i);
+        let imgNumber = `/night/${addZero(getRandomInt(20))}.jpg`;
+        if (!bgArr.slice(0, i).includes(imgNumber)) {
+        bgArr.push(imgNumber);
+        i++    
+        }
+    }
+
+    while (i < 12) {
+        let imgNumber = `/morning/${addZero(getRandomInt(20))}.jpg`;
+        if (!bgArr.slice(6, i).includes(imgNumber)) {
+        bgArr.push(imgNumber);
+        i++    
+        }
+    }
+
+    while (i < 18) {
+        let imgNumber = `/day/${addZero(getRandomInt(20))}.jpg`;
+        if (!bgArr.slice(12, i).includes(imgNumber)) {
+        bgArr.push(imgNumber);
+        i++    
+        }
+    }
+
+    while (i < 24) {
+        let imgNumber = `/evening/${addZero(getRandomInt(20))}.jpg`;
+        if (!bgArr.slice(18, i).includes(imgNumber)) {
+        bgArr.push(imgNumber);
+        i++    
+        }
+    }
+
+    console.log(bgArr)
+    return bgArr;
+}
+
+let bgArr = getBgArray();
 
 //Set Background and Greeting
 
@@ -202,25 +255,38 @@ function SetBgGreet() {
 
     if (hour >= 6 && hour < 12) {
         //Morning
-        document.body.style.backgroundImage = "url('./assets/images/morning/01.jpg')";
+        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Morning,'
     } else if (hour >= 12 && hour < 18) {
         //Afternoon
-        document.body.style.backgroundImage = "url('./assets/images/day/01.jpg')";
+        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Afternoon,'
 
     } else if (hour >= 18 && hour < 24) {
         //Evening
-        document.body.style.backgroundImage = "url('./assets/images/evening/01.jpg')";
+        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Evening,'
 
     } else {
         //Night
-        document.body.style.backgroundImage = "url('./assets/images/night/04.jpg')";
+        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Night,'
         document.body.style.color = 'white'
     }
+}
 
+const changeBgBtn = document.getElementById('bg');
+changeBgBtn.addEventListener('click', changeBg);
+
+//change background
+function changeBg() {
+    let bgImg = document.body.style.backgroundImage.match(/\/\w+\/\d+.jpg/)[0];
+    let curBgIndex = bgArr.indexOf(bgImg);
+    let newBgIndex = 0;
+    curBgIndex == 23 ? newBgIndex : newBgIndex = curBgIndex + 1;
+    document.body.style.backgroundImage = `url('./assets/images${bgArr[newBgIndex]}')`;
+    console.log(bgImg);
+    console.log(newBgIndex);
 }
 
 //Run
