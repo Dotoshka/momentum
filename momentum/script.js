@@ -1,6 +1,6 @@
 //Months and Days of week
 const months = month = ["January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December"];
+                        "August", "September", "October", "November", "December"];
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 //DOM Elements
@@ -9,30 +9,71 @@ const time = document.getElementById('time');
 const greeting = document.getElementById('greeting');
 const name = document.getElementById('name');
 const focus = document.getElementById('focus');
+const blockquote = document.querySelector('blockquote');
+const changeQuoteBtn = document.querySelector('#change-quote');
+const city = document.querySelector('.city');
+const invalidInput = document.querySelector('.invalid-input');
+const weatherIcon = document.querySelector('.weather-icon');
+const temperature = document.querySelector('.temperature');
+const feelsLike = document.querySelector('.feels-like');
+const windSpeed = document.querySelector('.wind-speed');
+const humidity = document.querySelector('.humidity');
+const changeBgBtn = document.getElementById('change-bg');
+let bgArr = getBgArray();
+
+//Event listeners
+name.addEventListener('keypress', setName);
+name.addEventListener('blur', setName);
+name.addEventListener('click', editText);
+focus.addEventListener('keypress', setFocus);
+focus.addEventListener('blur', setFocus);
+focus.addEventListener('click', editText);
+changeBgBtn.addEventListener('click', changeBg);
+changeQuoteBtn.addEventListener('click', getQuote);
+city.addEventListener('keypress', setCity);
+city.addEventListener('blur', setCity);
+city.addEventListener('click', editText);
+
+//Run
+document.addEventListener('DOMContentLoaded', () => {
+    showTime();
+    SetBgGreet();
+    getName();
+    getFocus();
+    getWeather();
+    getQuote();
+});
+
+//ADD Zeros
+function addZero(number) {
+    return (parseInt(number, 10) < 10 ? '0' : '') + number;
+}
 
 //Show time
 function showTime() {
     let today = new Date();
-    let hour = today.getHours();
-    let min = today.getMinutes();
-    let sec = today.getSeconds();
-
     let dayOfWeek = today.getDay();
     let day = today.getDate();
     let month = today.getMonth();
+    let hour = today.getHours();
+    let min = today.getMinutes();
+    let sec = today.getSeconds();
+    
+    //Output date and time
+    dateToday.innerHTML = `${daysOfWeek[dayOfWeek]}, ${day} ${months[month]}`;
+    time.innerHTML = `${addZero(hour)}<span class="separator">:</span>${addZero(min)}<span class="separator">:</span>${addZero(sec)}`;
 
-
-    //Output time
-    dateToday.innerHTML = `${day} ${months[month]}, ${daysOfWeek[dayOfWeek]}`;
-    time.innerHTML = `${addZero(hour)}<span>:</span>${addZero(min)}<span>:</span>${addZero(sec)}`;
+    if (min == 00 && sec == 00) {
+        SetBgGreet();
+        getWeather();
+    }
 
     setTimeout(showTime, 1000);
 }
 
-//ADD Zeros
-
-function addZero(number) {
-    return (parseInt(number, 10) < 10 ? '0' : '') + number;
+//Edit Name, Focus or City
+function editText(e) {
+    e.target.innerText = '';
 }
 
 //Get Name
@@ -66,12 +107,6 @@ function setName(e) {
     }
 }
 
-//Edit Name or Focus
-function editText(e) {
-    // e.target.setAttribute('contenteditable', 'true');
-    e.target.innerText = '';
-}
-
 //Get Focus
 function getFocus() {
     if (localStorage.getItem('focus') === null) {
@@ -103,18 +138,7 @@ function setFocus(e) {
     }
 }
 
-name.addEventListener('keypress', setName);
-name.addEventListener('blur', setName);
-name.addEventListener('focus', editText);
-focus.addEventListener('keypress', setFocus);
-focus.addEventListener('blur', setFocus);
-focus.addEventListener('click', editText);
-
 //Get quote
-
-const blockquote = document.querySelector('blockquote');
-const btn = document.querySelector('.btn');
-
 async function getQuote() {
     const url = `https://catfact.ninja/fact?max_length=140`;
     const res = await fetch(url);
@@ -122,18 +146,7 @@ async function getQuote() {
     blockquote.textContent = data.fact;
 }
 
-document.addEventListener('DOMContentLoaded', getQuote);
-btn.addEventListener('click', getQuote);
-
 //Get Weather
-const weatherIcon = document.querySelector('.weather-icon');
-const temperature = document.querySelector('.temperature');
-const humidity = document.querySelector('.humidity');
-const windSpeed = document.querySelector('.wind-speed');
-const weatherDescription = document.querySelector('.weather-description');
-const city = document.querySelector('.city');
-const invalidInput = document.querySelector('.invalid-input');
-
 async function getWeather() {
 
     if (localStorage.getItem('city') === null) {
@@ -141,33 +154,28 @@ async function getWeather() {
     } else {
         city.textContent = localStorage.getItem('city');
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.textContent}&lang=en&appid=d1d1319765c55b9da36bc725b7c79f45&units=metric`;
-        const res = await fetch(url);
-        const data = await res.json();
-        console.log(data.name);
-        if (data.name === undefined) {
-            console.log('Issue');
-            //localStorage.setItem('city', '[Enter Correct City]');
-            //city.textContent = '[Enter Correct City]';
+        if ((await fetch(url)).ok == true) {
+            const res = await fetch(url);
+            const data = await res.json();
+            weatherIcon.className = 'weather-icon owf';
+            weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+            temperature.textContent = `${Math.round(data.main.temp)}°C`;
+            humidity.textContent = `Humidity: ${data.main.humidity}%`;
+            windSpeed.textContent = `Wind: ${data.wind.speed} m/s`;
+            feelsLike.textContent = `Feels like: ${Math.round(data.main.feels_like)}°`;
+            invalidInput.style.display = 'none';
+        } else {
             invalidInput.style.display = 'initial'
             temperature.textContent = '';
             humidity.textContent = '';
             windSpeed.textContent = '';
-            weatherDescription.textContent = '';
+            feelsLike.textContent = '';
             weatherIcon.className = 'weather-icon owf';
-        } else {
-            console.log(data.weather[0].id, data.weather[0].description, data.main.temp);
-            weatherIcon.className = 'weather-icon owf';
-            weatherIcon.classList.add(`owf-${data.weather[0].id}`);
-            temperature.textContent = `${data.main.temp}°C`;
-            humidity.textContent = `${data.main.humidity}%`;
-            windSpeed.textContent = `${data.wind.speed}m/s`;
-            weatherDescription.textContent = data.weather[0].description;
-            invalidInput.style.display = 'none';
         }
     }
-
 }
 
+//Set city
 function setCity(e) {
     if (e.type === 'keypress') {
         if (e.which == 13 || e.keyCode == 13) {
@@ -189,27 +197,17 @@ function setCity(e) {
     }
 }
 
-city.addEventListener('keypress', setCity);
-city.addEventListener('blur', setCity);
-city.addEventListener('click', editText);
-
 // Get random integer (from 1)
-
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max) + 1);
 }
 
-
 // Get background images array
-
-
 function getBgArray() {
     let bgArr = [];
     let i = 0;
-    //let imgNumber = 0;
 
     while (i < 6) { 
-        //console.log(i);
         let imgNumber = `/night/${addZero(getRandomInt(20))}.jpg`;
         if (!bgArr.slice(0, i).includes(imgNumber)) {
         bgArr.push(imgNumber);
@@ -241,14 +239,10 @@ function getBgArray() {
         }
     }
 
-    console.log(bgArr)
     return bgArr;
 }
 
-let bgArr = getBgArray();
-
 //Set Background and Greeting
-
 function SetBgGreet() {
     let today = new Date();
     let hour = today.getHours();
@@ -261,12 +255,10 @@ function SetBgGreet() {
         //Afternoon
         document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Afternoon,'
-
     } else if (hour >= 18 && hour < 24) {
         //Evening
         document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
-        greeting.textContent = 'Good Evening,'
-
+        greeting.textContent = `Good Evening,`
     } else {
         //Night
         document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
@@ -275,25 +267,11 @@ function SetBgGreet() {
     }
 }
 
-const changeBgBtn = document.getElementById('bg');
-changeBgBtn.addEventListener('click', changeBg);
-
-//change background
+//Change background
 function changeBg() {
     let bgImg = document.body.style.backgroundImage.match(/\/\w+\/\d+.jpg/)[0];
     let curBgIndex = bgArr.indexOf(bgImg);
     let newBgIndex = 0;
     curBgIndex == 23 ? newBgIndex : newBgIndex = curBgIndex + 1;
     document.body.style.backgroundImage = `url('./assets/images${bgArr[newBgIndex]}')`;
-    console.log(bgImg);
-    console.log(newBgIndex);
 }
-
-//Run
-showTime();
-SetBgGreet();
-getName();
-getFocus();
-getWeather();
-
-//document.addEventListener('DOMContentLoaded', getWeather);

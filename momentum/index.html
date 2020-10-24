@@ -5,34 +5,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/owfont-regular.css">
     <link rel="stylesheet" href="style.css">
     <title>Momentum</title>
 </head>
 
 <body>
-    <div class="city" contenteditable="true">Minsk</div>
-    <i class="weather-icon owf"></i>
-    <div class="temperature"></div>
-    <div class="humidity"></div>
-    <div class="wind-speed"></div>
-    <div class="weather-description"></div>
-    <div class="invalid-input">Enter Correct City</div>
 
-    <div id="date-today"></div>
-    <time id="time"></time>
-    <h1>
-        <span id="greeting"></span>
-        <span id="name" contenteditable="true"></span>
-    </h1>
+    <div class="header-container">
 
-    <h2>What Is Your Focus For Today?</h2>
-    <h2 id="focus" contenteditable="true"></h2>
+        <div class="btn-container">
+            <button id="change-bg" class="change-btn" title="New background image"></button>
+            <button id="change-quote" class="change-btn" title="New cat fact"></button>
+        </div>
 
-    <button class="btn"></button>
-    <blockquote class="quote">HHH</blockquote>
+        <div class="weather-container">
+            <div class="city editable" contenteditable="true" spellcheck="false">Minsk</div>
+            <div class="weather-wrapper">
+                <div class="invalid-input">Enter Correct City</div>
+                <div class="icon-temp">
+                    <i class="weather-icon owf"></i>
+                    <div class="temperature"></div>
+                </div>
+                <div class="weather-params">
+                    <div class="feels-like"></div>
+                    <div class="humidity"></div>
+                    <div class="wind-speed"></div>
+                </div>
+            </div>
+        </div>
 
-    <button id="bg">Change</button>
+    </div>
+
+    <div class="main-container">
+
+        <div id="date-today"></div>
+        <section id="time" class="time"></section>
+
+        <div class="greeting-wrapper">
+            <span id="greeting"></span>
+            <span id="name" class="editable" contenteditable="true" spellcheck="false"></span>
+        </div>
+
+        <h2>What Is Your Focus For Today?</h2>
+        <h2 id="focus" class="editable" contenteditable="true" spellcheck="false"></h2>
+
+    </div>
+
+    <blockquote class="quote"></blockquote>
 
     <script src="script.js"></script>
 </body>
