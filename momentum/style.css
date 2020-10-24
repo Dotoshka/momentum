@@ -52,39 +52,66 @@ body {
     cursor: pointer;
 }
 
-.change-btn {
-    border-radius: 50%;
-    border: 2px solid rgba(0,1,6,.2);
-    width: 36px;
-    height: 36px;
-    background-color: rgba(252,252,252,.9);
-    outline: none;
-    background-size: contain;
-    background-repeat: no-repeat;
-    box-shadow:
-    inset rgba(0,0,0,.6) 0 -3px 8px,
-    inset rgba(252,255,255,.7) 0 3px 8px,
-    rgba(252,252,252,.7) 0 3px 8px -3px;
-    transition: .2s ease-in-out;
+.btn-container {
+    display: flex;
 }
 
-.change-btn:hover {
-    cursor: pointer;
-    border: 2px solid rgba(252,252,252,0.9);
-    background-color: rgba(252,252,252);
-    
+.change-btn {
+    background-image: -webkit-linear-gradient(top, #f4f1ee, #fff);
+    background-image: linear-gradient(top, #f4f1ee, #fff);
+    border-radius: 50%;
+    box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, .3), inset 0px 4px 1px 1px white, inset 0px -3px 1px 1px rgba(204,198,197,.5);
+    height: 52px;
+    width: 52px;
+    float:left;
+    position: relative;			
+    transition: all .1s linear;
 }
+
+.change-btn:after{
+    color:#e9e6e4;
+    content: "";
+    display: block;
+    font-size: 30px;
+    height: 30px;
+    text-decoration: none;
+    text-shadow: 0px -1px 1px #bdb5b4, 1px 1px 1px white;
+    position: absolute;
+    width: 30px;
+}
+
+#change-bg { margin-right: 20px;}
+#change-bg:after{
+    content: "🌸";
+    left: 10px;
+    top: 8px;
+}
+
+#change-quote:after{
+    content: "🐱";
+    left: 10px;
+    top: 9px;
+}
+
+.change-btn:hover{
+    background-image: -webkit-linear-gradient(top, #fff, #f4f1ee);
+    background-image: linear-gradient(top, #fff, #f4f1ee);
+    color:#0088cc;
+}
+
+#change-bg:hover:after{ text-shadow:0px 0px 6px #f94e66; }
+#change-quote:hover:after{ text-shadow:0px 0px 6px #f99e4e; }
 
 .change-btn:active{
-    transform: scale(1.02)
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
 }
 
-#change-bg { 
-    background-image: url("./assets/icons/change-bg.svg"); 
-    margin-right: 20px;
+.change-btn:active:after{
+    color:#dbd2d2;
+    text-shadow: 0px -1px 1px #bdb5b4, 0px 1px 1px white;
 }
-
-#change-quote { background-image: url("./assets/icons/cat-icon.svg"); }
 
 .weather-container {
     padding: 10px;
