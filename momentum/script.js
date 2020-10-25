@@ -35,14 +35,18 @@ city.addEventListener('blur', setCity);
 city.addEventListener('click', editText);
 
 //Run
+
 document.addEventListener('DOMContentLoaded', () => {
-    showTime();
-    SetBgGreet();
-    getName();
-    getFocus();
     getWeather();
-    getQuote();
-});
+})
+
+showTime();
+setGreet();
+setBg();
+getName();
+getFocus();
+getQuote();
+
 
 //ADD Zeros
 function addZero(number) {
@@ -64,7 +68,8 @@ function showTime() {
     time.innerHTML = `${addZero(hour)}<span class="separator">:</span>${addZero(min)}<span class="separator">:</span>${addZero(sec)}`;
 
     if (min == 00 && sec == 00) {
-        SetBgGreet();
+        setGreet();
+        setBg()
         getWeather();
     }
 
@@ -204,11 +209,12 @@ function getRandomInt(max) {
 
 // Get background images array
 function getBgArray() {
+    const base = "assets/images"
     let bgArr = [];
     let i = 0;
 
     while (i < 6) { 
-        let imgNumber = `/night/${addZero(getRandomInt(20))}.jpg`;
+        let imgNumber = `${base}/night/${addZero(getRandomInt(20))}.jpg`;
         if (!bgArr.slice(0, i).includes(imgNumber)) {
         bgArr.push(imgNumber);
         i++    
@@ -216,7 +222,7 @@ function getBgArray() {
     }
 
     while (i < 12) {
-        let imgNumber = `/morning/${addZero(getRandomInt(20))}.jpg`;
+        let imgNumber = `${base}/morning/${addZero(getRandomInt(20))}.jpg`;
         if (!bgArr.slice(6, i).includes(imgNumber)) {
         bgArr.push(imgNumber);
         i++    
@@ -224,7 +230,7 @@ function getBgArray() {
     }
 
     while (i < 18) {
-        let imgNumber = `/day/${addZero(getRandomInt(20))}.jpg`;
+        let imgNumber = `${base}/day/${addZero(getRandomInt(20))}.jpg`;
         if (!bgArr.slice(12, i).includes(imgNumber)) {
         bgArr.push(imgNumber);
         i++    
@@ -232,7 +238,7 @@ function getBgArray() {
     }
 
     while (i < 24) {
-        let imgNumber = `/evening/${addZero(getRandomInt(20))}.jpg`;
+        let imgNumber = `${base}/evening/${addZero(getRandomInt(20))}.jpg`;
         if (!bgArr.slice(18, i).includes(imgNumber)) {
         bgArr.push(imgNumber);
         i++    
@@ -243,35 +249,48 @@ function getBgArray() {
 }
 
 //Set Background and Greeting
-function SetBgGreet() {
+function setGreet() {
     let today = new Date();
     let hour = today.getHours();
-
     if (hour >= 6 && hour < 12) {
         //Morning
-        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Morning,'
     } else if (hour >= 12 && hour < 18) {
         //Afternoon
-        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Afternoon,'
     } else if (hour >= 18 && hour < 24) {
         //Evening
-        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = `Good Evening,`
     } else {
         //Night
-        document.body.style.backgroundImage = `url('./assets/images${bgArr[hour]}')`;
         greeting.textContent = 'Good Night,'
-        document.body.style.color = 'white'
     }
+}
+
+function setBg() {
+    let today = new Date();
+    let hour = today.getHours();
+    const src = bgArr[hour];
+    //console.log(src);
+    const img = document.createElement('img');
+    //console.log(img);
+    img.src = src;
+    //console.log(img.src);
+    img.onload = () => {
+        document.body.style.backgroundImage = `url(${src})`;
+    };
 }
 
 //Change background
 function changeBg() {
-    let bgImg = document.body.style.backgroundImage.match(/\/\w+\/\d+.jpg/)[0];
+    let bgImg = document.body.style.backgroundImage.slice(4,-1).replace(/"/g, "");
     let curBgIndex = bgArr.indexOf(bgImg);
     let newBgIndex = 0;
     curBgIndex == 23 ? newBgIndex : newBgIndex = curBgIndex + 1;
-    document.body.style.backgroundImage = `url('./assets/images${bgArr[newBgIndex]}')`;
+    const src = bgArr[newBgIndex];
+    const img = document.createElement('img');
+    img.src = src;
+    img.onload = () => {
+        document.body.style.backgroundImage = `url(${src})`;
+    };
 }
